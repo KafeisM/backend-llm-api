@@ -16,11 +16,12 @@ from app.api.routes_chat import router as chat_router
 
 logger = get_logger(__name__)
 
+# lifespan is a pattern used in FastAPI to manage the application's lifecycle.
 
 @asynccontextmanager
 async def lifespan(app: FastAPI) -> AsyncIterator[None]:
     """Application lifespan: startup and shutdown events."""
-    # --- Startup ---
+    # --- Startup lifespan ---
     setup_logging()
     logger.info("Starting Backend LLM API")
     logger.info("Host: %s | Port: %s", settings.app_host, settings.app_port)
@@ -30,10 +31,10 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
         "yes" if settings.openrouter_api_key else "NO — set OPENROUTER_API_KEY",
     )
     yield
-    # --- Shutdown ---
+    # --- Shutdown lifespan (yield) ---
     logger.info("Shutting down Backend LLM API")
 
-
+# define the FastAPI application instance
 app = FastAPI(
     title="Backend LLM API",
     description="REST API that integrates with OpenRouter LLM using internal knowledge context.",
