@@ -13,6 +13,8 @@ from fastapi import FastAPI
 from app.core.config import settings
 from app.core.logging import setup_logging, get_logger
 from app.api.routes_chat import router as chat_router
+from app.db.session import init_db
+from app.db.seed import seed_database
 
 logger = get_logger(__name__)
 
@@ -30,6 +32,12 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
         "OpenRouter API key configured: %s",
         "yes" if settings.openrouter_api_key else "NO — set OPENROUTER_API_KEY",
     )
+
+    # Initialize database tables and seed with knowledge data
+    init_db()
+    seed_database()
+    logger.info("Database initialized and seeded")
+
     yield
     # --- Shutdown lifespan (yield) ---
     logger.info("Shutting down Backend LLM API")

@@ -2,7 +2,7 @@
 
 REST API en Python que integra un LLM (a través de OpenRouter) con una base de conocimiento interna para responder preguntas de forma contextualizada.
 
-> **Estado actual**: Estructura base + configuración + servidor FastAPI con endpoint `/health`.
+> **Estado actual**: Servidor FastAPI + endpoint `/health` + base de conocimiento SQLite con datos semilla.
 
 ---
 
@@ -79,7 +79,17 @@ Variables disponibles:
 | `LOG_LEVEL` | Nivel de logging | `INFO` |
 | `DATABASE_URL` | URL de la base de datos SQLite | `sqlite:///./nuria.db` |
 
-### 5. Arrancar el servidor
+### 5. Inicializar la base de datos (opcional)
+
+La base de datos se inicializa automáticamente al arrancar el servidor, pero también puedes poblarla manualmente:
+
+```bash
+python -m app.db.seed
+```
+
+Esto crea el archivo `nuria.db` con 10 entradas de conocimiento interno.
+
+### 6. Arrancar el servidor
 
 ```bash
 uvicorn app.main:app --host 0.0.0.0 --port 8080
@@ -171,9 +181,36 @@ pytest tests/ -v
 
 ---
 
+## Base de conocimiento interna
+
+La API incluye una base de conocimiento SQLite con información simulada de empresa. Los datos semilla (`app/data/seed_data.json`) contienen 10 entradas:
+
+| Categoría | Tema |
+|---|---|
+| company | Company Overview |
+| company | Partners and Leadership |
+| company | Employee Count and Teams |
+| hr | Onboarding Process |
+| engineering | How to Open a Jira Ticket |
+| hr | Vacation and Time-Off Policy |
+| engineering | Incident Management Process |
+| engineering | Internal Tools and Platforms |
+| hr | Remote Work Policy |
+| engineering | Code Review and Deployment Process |
+
+Para re-poblar la base de datos:
+
+```bash
+python -m app.db.seed
+```
+
+---
+
 ## Decisiones de diseño
 
 - **pydantic-settings** para configuración: carga automática desde `.env` con validación de tipos
 - **Logging estructurado**: formato consistente con timestamps, fácil de parsear
 - **Lifespan async**: patrón moderno de FastAPI para startup/shutdown (sin decoradores `@app.on_event` deprecados)
 - **Separación de responsabilidades**: rutas → servicios → datos, sin lógica de negocio en los handlers
+- **SQLAlchemy ORM**: para la base de conocimiento, con modelo `KnowledgeEntry` (title, content, tags, category)
+- **Seed automático**: la DB se inicializa y puebla al arrancar el servidor; también ejecutable manualmente

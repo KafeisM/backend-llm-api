@@ -1,1 +1,62 @@
-[]
+[
+  {
+    "title": "Company Overview",
+    "content": "Nuria Tech Solutions is a mid-sized technology consulting company founded in 2018 and headquartered in Barcelona, Spain. The company specializes in digital transformation, cloud migration, and custom software development for enterprise clients across Europe. Nuria Tech currently operates in 3 countries: Spain, Portugal, and Germany.",
+    "tags": "company,overview,about,nuria,founded,headquarters,barcelona,mission",
+    "category": "company"
+  },
+  {
+    "title": "Partners and Leadership",
+    "content": "Nuria Tech Solutions has 5 founding partners: Elena Martínez (CEO), Carlos Ruiz (CTO), Ana Beltrán (COO), Jorge Navarro (CFO), and Laura Chen (VP of Engineering). The leadership team meets weekly on Tuesdays at 10:00 AM CET. Strategic decisions require approval from at least 3 of the 5 partners.",
+    "tags": "partners,leadership,founders,ceo,cto,management,team,elena,carlos,ana,jorge,laura",
+    "category": "company"
+  },
+  {
+    "title": "Employee Count and Teams",
+    "content": "As of 2025, Nuria Tech Solutions has 127 employees distributed across the following teams: Engineering (62 people), Product (15 people), Design (10 people), Sales (18 people), Marketing (8 people), HR (6 people), Finance (4 people), and Operations (4 people). The company has grown 40% year over year since 2022.",
+    "tags": "employees,count,headcount,teams,engineering,product,design,sales,growth,staff,people",
+    "category": "company"
+  },
+  {
+    "title": "Onboarding Process",
+    "content": "New employees go through a 2-week onboarding process. Week 1 includes: equipment setup (laptop, monitors, peripherals), account creation (email, Slack, GitHub, Jira), HR paperwork and benefits enrollment, security training, and a welcome lunch with the team. Week 2 includes: introduction to the codebase, pair programming sessions with a buddy, architecture overview presentation, and first small task assignment. Each new hire is assigned a dedicated onboarding buddy for their first 3 months.",
+    "tags": "onboarding,new,employee,hire,process,setup,welcome,buddy,training,first,day,week",
+    "category": "hr"
+  },
+  {
+    "title": "How to Open a Jira Ticket",
+    "content": "To create a new Jira ticket: 1) Go to jira.nuriatech.internal and log in with your company SSO. 2) Select the appropriate project board (ENG for engineering, PROD for product, OPS for operations). 3) Click 'Create Issue' and choose the issue type: Bug, Story, Task, or Epic. 4) Fill in the required fields: Summary, Description, Priority (P1-Critical to P4-Low), and Assignee. 5) Add labels and sprint if applicable. 6) For bugs, always include: steps to reproduce, expected behavior, actual behavior, and screenshots. All tickets must follow the naming convention: [TEAM]-[NUMBER] Description.",
+    "tags": "jira,ticket,issue,bug,create,how,to,project,board,task,story,epic,report",
+    "category": "engineering"
+  },
+  {
+    "title": "Vacation and Time-Off Policy",
+    "content": "All full-time employees receive 23 paid vacation days per year, plus national and regional holidays. Vacation requests must be submitted at least 2 weeks in advance through BambooHR. Team leads must approve requests within 3 business days. No more than 30% of a team can be on vacation simultaneously. Unused vacation days can be carried over (maximum 5 days) to Q1 of the following year. Sick leave requires a medical certificate if it exceeds 3 consecutive days. Employees also get 2 personal days per year for appointments or errands.",
+    "tags": "vacation,holidays,time,off,days,policy,leave,sick,pto,bamboo,request,paid",
+    "category": "hr"
+  },
+  {
+    "title": "Incident Management Process",
+    "content": "Incidents are classified by severity: SEV1 (service down, all users affected - response within 15 minutes), SEV2 (major feature broken, many users affected - response within 1 hour), SEV3 (minor feature issue, some users affected - response within 4 hours), SEV4 (cosmetic or low-impact issue - next business day). For SEV1 and SEV2: immediately notify the on-call engineer via PagerDuty, create an incident channel in Slack (#incident-YYYY-MM-DD), start a war room call, and post status updates every 30 minutes. Post-incident reviews are mandatory for SEV1 and SEV2 within 48 hours. The on-call rotation is weekly and managed in PagerDuty.",
+    "tags": "incident,severity,sev1,sev2,outage,pagerduty,oncall,on-call,emergency,war,room,postmortem,response",
+    "category": "engineering"
+  },
+  {
+    "title": "Internal Tools and Platforms",
+    "content": "Nuria Tech uses the following internal tools: Communication - Slack (primary), Google Meet (video calls), email (external only). Project Management - Jira (engineering), Notion (documentation and wikis). Code - GitHub Enterprise (repositories), GitHub Actions (CI/CD), SonarQube (code quality). Infrastructure - AWS (primary cloud), Terraform (IaC), Datadog (monitoring), PagerDuty (alerting). HR - BambooHR (time off, payroll), Greenhouse (recruiting). Design - Figma (UI/UX design), Miro (whiteboarding). All tools are accessible via company SSO (Okta).",
+    "tags": "tools,platforms,software,slack,github,jira,notion,aws,internal,sso,okta,datadog,figma",
+    "category": "engineering"
+  },
+  {
+    "title": "Remote Work Policy",
+    "content": "Nuria Tech operates with a hybrid work model. Employees can work remotely up to 3 days per week. Tuesday and Thursday are mandatory in-office days for team collaboration. Fully remote positions are available for senior roles with manager approval. Remote workers must be available during core hours (10:00 AM - 4:00 PM CET). Home office equipment stipend: 500 EUR one-time setup allowance for new employees. Internet reimbursement: 30 EUR/month for remote workers.",
+    "tags": "remote,work,home,office,hybrid,policy,wfh,flexible,hours,stipend",
+    "category": "hr"
+  },
+  {
+    "title": "Code Review and Deployment Process",
+    "content": "All code changes require a pull request with at least 1 approval from a peer reviewer. PRs must pass all CI checks (tests, linting, security scan) before merging. The main branch is protected and requires linear history (rebase merging). Deployments to staging happen automatically on merge to main. Production deployments are triggered manually through GitHub Actions and require approval from a tech lead. Deployment windows are Monday to Thursday, 10:00 AM - 3:00 PM CET. No deployments on Fridays or before holidays (freeze periods). Rollback procedures must be documented for every production release.",
+    "tags": "code,review,pull,request,pr,deployment,deploy,ci,cd,merge,staging,production,release,rollback",
+    "category": "engineering"
+  }
+]
