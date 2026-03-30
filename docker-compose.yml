@@ -1,1 +1,13 @@
-# docker-compose.yml - to be implemented
+services:
+  api:
+    build: .
+    container_name: backend-llm-api
+    ports:
+      - "8080:8080"
+    env_file:
+      - .env
+    environment:
+      - APP_HOST=0.0.0.0
+      - APP_PORT=8080
+      - DATABASE_URL=sqlite:///./nuria.db
+    restart: unless-stopped
