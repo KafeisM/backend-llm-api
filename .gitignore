@@ -1,23 +1,46 @@
 # Virtual environment
 venv/
+.venv/
 
-# Environment variables
+# Environment variables (NEVER commit secrets)
 .env
+.env.local
+.env.*.local
 
 # Python
 __pycache__/
 *.py[cod]
+*$py.class
 *.egg-info/
+*.egg
 dist/
 build/
+*.so
 
 # SQLite database
 *.db
+*.db-journal
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
 
 # IDE
 .vscode/
 .idea/
+*.swp
+*.swo
+*~
 
 # OS
 .DS_Store
 Thumbs.db
+Desktop.ini
+
+# Docker
+docker-compose.override.yml
+
+# Logs
+*.log

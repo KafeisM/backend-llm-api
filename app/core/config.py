@@ -27,7 +27,7 @@ class Settings(BaseSettings):
 
     # --- OpenRouter ---
     openrouter_api_key: str = ""
-    openrouter_model: str = "meta-llama/llama-3.1-8b-instruct:free"
+    openrouter_model: str = "openrouter/free"
     openrouter_base_url: str = "https://openrouter.ai/api/v1"
     openrouter_timeout: int = 30  # seconds
 

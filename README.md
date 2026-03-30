@@ -1,170 +1,369 @@
-# Backend LLM API
+# 🤖 Backend LLM API
 
-REST API en Python desarrollada con FastAPI que expone un endpoint de chat impulsado por LLMs (vía OpenRouter) y aterrizado mediante *Retrieval-Augmented Generation (RAG)* usando una base de conocimientos local de la empresa.
+> **REST API powered by FastAPI** that integrates with [OpenRouter](https://openrouter.ai) to provide  
+> LLM-driven chat responses grounded in a local SQLite knowledge base.
 
-Este proyecto resuelve el desafío técnico de arquitectura backend, priorizando simplicidad, bajo acoplamiento, reproducibilidad y excelencia en testing, evitando sobreingeniería.
-
----
-
-## 🏗️ Architecture Summary
-
-La arquitectura sigue un patrón de **Separación de Responsabilidades (Separation of Concerns)** muy claro:
-
-- **Routes (`api/`)**: Handlers extremadamente delgados que solo definen contratos HTTP (Pydantic models) y manejan códigos de error. No conocen de LLMs ni de SQL.
-- **Services (`services/`)**: La lógica de negocio pura. `chat_service.py` actúa como orquestador, tomando el mensaje del usuario, pidiendo contexto a `retrieval_service.py` e invocando al `openrouter_service.py`.
-- **Database (`db/`):** Capa de acceso a datos utilizando una base de datos local SQLite (`nuria.db`) gestionada nativamente y por el ORM SQLAlchemy para escalar si se desea. Aislada mediante inyección de dependencias estricta.
-
-## 🚀 Tech Stack
-
-- **Python 3.13**
-- **FastAPI** + **Uvicorn**
-- **SQLite** + **SQLAlchemy**
-- **HTTPX** (Para llamadas asincrónicas limpias al exterior)
-- **Pytest** + **TestClient** + **AsyncMock**
-- **Docker** + **Docker Compose**
+![Python 3.13](https://img.shields.io/badge/Python-3.13-3776AB?logo=python&logoColor=white)
+![FastAPI](https://img.shields.io/badge/FastAPI-0.115+-009688?logo=fastapi&logoColor=white)
+![SQLite](https://img.shields.io/badge/SQLite-003B57?logo=sqlite&logoColor=white)
+![Docker](https://img.shields.io/badge/Docker-2496ED?logo=docker&logoColor=white)
+![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)
 
 ---
 
-## ⚙️ Setup Instructions & Environment Variables
+## 📋 Table of Contents
 
-Para ejecutar ya sea localmente o mediante Docker, el primer paso es clonar y configurar el entorno:
+- [Overview](#-overview)
+- [Architecture](#-architecture)
+- [Tech Stack](#-tech-stack)
+- [Project Structure](#-project-structure)
+- [Getting Started](#-getting-started)
+  - [Prerequisites](#prerequisites)
+  - [Local Setup](#option-1-local-development)
+  - [Docker Setup](#option-2-docker-recommended)
+- [API Reference](#-api-reference)
+- [Configuration](#-configuration)
+- [Knowledge Base](#-knowledge-base)
+- [Testing](#-testing)
+- [Development](#-development)
+
+---
+
+## 🧠 Overview
+
+This API acts as an **intelligent internal assistant** for a company. When a user asks a question, the system:
+
+1. **Retrieves** relevant context from a local SQLite knowledge base using keyword matching
+2. **Builds** a grounded prompt combining the internal context with the user's question
+3. **Sends** the prompt to an LLM via OpenRouter
+4. **Returns** a structured response with metadata about sources used
+
+The result is an LLM that **answers using real company data first**, reducing hallucinations and providing traceable, context-aware responses.
+
+---
+
+## 🏗 Architecture
+
+```
+┌─────────────┐     ┌──────────────────────────────────────────────────┐     ┌──────────────┐
+│             │     │                  FastAPI Server                  │     │              │
+│   Client    │────▶│                                                  │────▶│  OpenRouter   │
+│  (HTTP)     │◀────│  Routes ──▶ Chat Service ──▶ OpenRouter Service  │◀────│   (LLM API)  │
+│             │     │                  │                                │     │              │
+└─────────────┘     │          Retrieval Service                       │     └──────────────┘
+                    │                  │                                │
+                    │            ┌─────┴─────┐                         │
+                    │            │  SQLite   │                         │
+                    │            │  (nuria.db)│                         │
+                    │            └───────────┘                         │
+                    └──────────────────────────────────────────────────┘
+```
+
+**Request Flow:**
+
+```
+POST /chat/ → Validate Input → Extract Keywords → Query Knowledge Base
+           → Build Prompt (System + Context + User Message)
+           → Call OpenRouter LLM → Return Structured Response
+```
+
+---
+
+## 🛠 Tech Stack
+
+| Category          | Technology                                                      |
+|-------------------|-----------------------------------------------------------------|
+| **Framework**     | [FastAPI](https://fastapi.tiangolo.com/) — async Python web framework |
+| **LLM Provider**  | [OpenRouter](https://openrouter.ai/) — unified API for multiple LLMs |
+| **Database**      | SQLite via [SQLAlchemy](https://www.sqlalchemy.org/) ORM        |
+| **HTTP Client**   | [HTTPX](https://www.python-httpx.org/) — async HTTP requests    |
+| **Validation**    | [Pydantic v2](https://docs.pydantic.dev/) — data validation & settings |
+| **Server**        | [Uvicorn](https://www.uvicorn.org/) — ASGI server               |
+| **Testing**       | [Pytest](https://docs.pytest.org/) + pytest-asyncio             |
+| **Linting**       | [Ruff](https://github.com/astral-sh/ruff) — fast Python linter  |
+| **Containerization** | Docker + Docker Compose                                      |
+
+---
+
+## 📁 Project Structure
+
+```
+backend-llm-api/
+├── app/
+│   ├── __init__.py
+│   ├── main.py                  # FastAPI app, lifespan, middleware, error handlers
+│   ├── api/
+│   │   └── routes_chat.py       # /health and /chat/ endpoint handlers
+│   ├── core/
+│   │   ├── config.py            # Centralized settings (env vars + .env)
+│   │   ├── logging.py           # Structured logging setup
+│   │   └── prompts.py           # System prompt templates for the LLM
+│   ├── schemas/
+│   │   └── chat.py              # Pydantic models: ChatRequest, ChatResponse, ErrorResponse
+│   ├── services/
+│   │   ├── chat_service.py      # Chat orchestration (retrieval → prompt → LLM)
+│   │   ├── openrouter_service.py # OpenRouter HTTP client
+│   │   └── retrieval_service.py  # Keyword-based knowledge retrieval
+│   ├── db/
+│   │   ├── models.py            # SQLAlchemy ORM models (KnowledgeEntry)
+│   │   ├── session.py           # Database session management
+│   │   └── seed.py              # Seed script for initial knowledge data
+│   └── data/
+│       └── seed_data.json       # Knowledge base seed entries
+├── tests/
+│   ├── conftest.py              # Shared fixtures (test DB, mock client)
+│   ├── test_health.py           # Health endpoint tests
+│   ├── test_chat.py             # Chat endpoint tests
+│   └── test_retrieval.py        # Retrieval service unit tests
+├── Dockerfile                   # Multi-stage Docker image
+├── docker-compose.yml           # Container orchestration
+├── .dockerignore                # Exclude venv, .git, secrets from build
+├── requirements.txt             # Python dependencies
+├── Makefile                     # Development shortcuts
+├── .env.example                 # Environment variable template
+├── .gitignore                   # Git exclusions
+└── README.md                    # ← You are here
+```
+
+---
+
+## 🚀 Getting Started
+
+### Prerequisites
+
+- **Python 3.13+** (local) or **Docker** (containerized)
+- An **OpenRouter API key** — [get one free here](https://openrouter.ai/keys)
+
+### Option 1: Local Development
 
 ```bash
-git clone https://github.com/tu-usuario/backend-llm-api.git
+# 1. Clone the repository
+git clone https://github.com/KafeisM/backend-llm-api.git
 cd backend-llm-api
+
+# 2. Create and activate virtual environment
+python -m venv venv
+.\venv\Scripts\activate        # Windows
+# source venv/bin/activate     # macOS/Linux
+
+# 3. Install dependencies
+pip install -r requirements.txt
+
+# 4. Configure environment variables
+copy .env.example .env         # Windows
+# cp .env.example .env         # macOS/Linux
+
+# 5. Edit .env and add your OpenRouter API key
+# OPENROUTER_API_KEY=sk-or-v1-your-key-here
+
+# 6. Run the server
+make run
+# Or manually:
+uvicorn app.main:app --reload --host 0.0.0.0 --port 8080
 ```
 
-Copia el archivo de entorno base:
+### Option 2: Docker (Recommended)
+
 ```bash
-cp .env.example .env
-```
+# 1. Clone and configure
+git clone https://github.com/KafeisM/backend-llm-api.git
+cd backend-llm-api
+copy .env.example .env
+# Edit .env and add your OPENROUTER_API_KEY
 
-Abre `.env` en tu editor de texto y configura especialmente la llave de OpenRouter:
-```properties
-# .env
-OPENROUTER_API_KEY=tu_api_key_aqui
-OPENROUTER_MODEL=meta-llama/llama-3.1-8b-instruct:free
-APP_HOST=0.0.0.0
-APP_PORT=8080
-LOG_LEVEL=INFO
-DATABASE_URL=sqlite:///./nuria.db
-```
+# 2. Build and run
+docker compose up --build -d
 
----
+# 3. Check logs
+docker logs backend-llm-api
 
-## 🐳 Docker Run Instructions (Recomendado)
-
-La forma más limpia y replicable de arrancar la API es usando Docker Compose:
-
-```bash
-docker compose up --build
-```
-> El servicio inicializará automáticamente su base de datos y poblara la información interna. Estará escuchando de forma inmediata en `http://localhost:8080`.
-
-Para detenerlo:
-```bash
+# 4. Stop
 docker compose down
 ```
 
----
+### ✅ Verify it's running
 
-## 💻 Local Run Instructions (Desarrollo)
+```bash
+curl http://localhost:8080/health
+# → {"status":"ok"}
+```
 
-Si prefieres ejecutar el código localmente (útil para hacer pruebas o debug):
-
-1. **Crear y activar el entorno virtual:**
-    ```bash
-    # Windows (PowerShell)
-    python -m venv venv
-    .\venv\Scripts\activate
-    
-    # Linux/Mac
-    python3 -m venv venv
-    source venv/bin/activate
-    ```
-
-2. **Instalar dependencias:**
-    ```bash
-    pip install -r requirements.txt
-    ```
-
-3. **Ejecutar el servidor ASGI:**
-    ```bash
-    uvicorn app.main:app --host 0.0.0.0 --port 8080 --reload
-    ```
+Then open the **interactive API docs**: [http://localhost:8080/docs](http://localhost:8080/docs)
 
 ---
 
-## 🔗 Example API Usage (`curl`)
+## 📖 API Reference
 
-### 1. Healthcheck
+### `GET /health`
 
-Comprueba la vitalidad y latencia del servicio (útil en orquestadores):
-```bash
-curl -X GET http://localhost:8080/health
-```
-```json
-{"status": "ok"}
-```
+Health check endpoint to verify the service is running.
 
-### 2. Conversación de Chat (Conocimiento Interno)
-
-Este comando le pregunta a la API sobre un proceso de la empresa. La API detectará palabras clave, extraerá los documentos y los usará como fuente para la IA.
-
-```bash
-curl -X POST http://localhost:8080/chat/ \
-  -H "Content-Type: application/json" \
-  -d '{"message": "¿Cuál es la política de vacaciones?"}'
-```
-
+**Response** `200 OK`:
 ```json
 {
-  "message": "En Nuria Tech Solutions, todos los empleados disponen de 23 días de vacaciones al año. Estas peticiones deben tramitarse mediante BambooHR con al menos 2 semanas de antelación.",
-  "model": "meta-llama/llama-3.1-8b-instruct:free",
-  "used_context": true,
-  "sources": [
-    "Vacation Policy"
-  ]
+  "status": "ok"
 }
 ```
 
 ---
 
-## 🧠 Explicación de Recuperación de Contexto (Retrieval Strategy)
+### `POST /chat/`
 
-En lugar de incrustar complejas infraestructuras de bases de datos vectoriales abstractas (que para bases de RRHH pequeñas es excesivo), hemos incorporado un motor de **Keyword Scoring Local**.
+Send a message and receive an LLM-powered response grounded in the internal knowledge base.
 
-1. El usuario envía un mensaje (`"¿Cuál es el proceso de un ticket Jira?"`).
-2. El sistema aplica **Normalización de Texto**: convierte a minúsculas, remueve signos de puntuación, y descarta **Stop Words** ("el", "de", "cual") y palabras menores a 3 caracteres.
-3. El sistema extrae los **Keywords** resultantes (`"proceso"`, `"ticket"`, `"jira"`).
-4. El motor compara en memoria RAM o vía SQL, asignando pesos dinámicos a las entradas con matches (Tags = 3 Pts, Title = 2 Pts, Content = 1 Pt).
-5. Las entradas con una puntuación superior a `0` se ordenan, y se formatean elegantemente como bloques de texto (Max Top `K`), inyectándose transparentemente en el Prompt Final para OpenRouter.
+**Request Body:**
+```json
+{
+  "message": "How many partners does the company have?"
+}
+```
 
-Todo esto está **100% cubierto por Unit Tests** exhaustivos en `test_retrieval.py` que comprueban la heurística de exactitud.
+| Field     | Type   | Required | Constraints        | Description               |
+|-----------|--------|----------|--------------------|---------------------------|
+| `message` | string | ✅       | 1–2000 characters  | The user's question       |
+
+**Response** `200 OK`:
+```json
+{
+  "message": "Nuria Tech Solutions has 5 founding partners: Elena Martínez (CEO), Carlos Ruiz (CTO), Ana Beltrán (COO), Jorge Navarro (CFO), and Laura Chen (VP of Engineering).",
+  "model": "openrouter/free",
+  "used_context": true,
+  "sources": ["Partners and Leadership"]
+}
+```
+
+| Field          | Type     | Description                                         |
+|----------------|----------|-----------------------------------------------------|
+| `message`      | string   | The LLM-generated response                         |
+| `model`        | string   | Model used for generation                           |
+| `used_context` | boolean  | Whether internal knowledge context was used         |
+| `sources`      | string[] | Titles of knowledge entries used as context         |
+
+**Error Responses:**
+
+| Code | Error                     | Cause                                    |
+|------|---------------------------|------------------------------------------|
+| 422  | `VALIDATION_ERROR`        | Message missing, empty, or exceeds limit |
+| 500  | `INTERNAL_ERROR`          | Unexpected server error                  |
+| 502  | `UPSTREAM_LLM_ERROR`      | OpenRouter returned an error             |
+| 502  | `UPSTREAM_UNREACHABLE`    | Cannot connect to OpenRouter             |
+| 502  | `UPSTREAM_INVALID_RESPONSE` | Unexpected response format from LLM    |
+| 504  | `UPSTREAM_TIMEOUT`        | OpenRouter request timed out             |
+
+---
+
+## ⚙ Configuration
+
+All settings are loaded from environment variables (or a `.env` file):
+
+| Variable              | Default                                     | Description                          |
+|-----------------------|---------------------------------------------|--------------------------------------|
+| `OPENROUTER_API_KEY`  | *(required)*                                | Your OpenRouter API key              |
+| `OPENROUTER_MODEL`    | `meta-llama/llama-3.1-8b-instruct:free`     | LLM model to use                     |
+| `OPENROUTER_BASE_URL` | `https://openrouter.ai/api/v1`              | OpenRouter API base URL              |
+| `OPENROUTER_TIMEOUT`  | `30`                                        | Request timeout in seconds           |
+| `APP_HOST`            | `0.0.0.0`                                   | Server bind host                     |
+| `APP_PORT`            | `8080`                                      | Server bind port                     |
+| `LOG_LEVEL`           | `INFO`                                      | Logging level (DEBUG/INFO/WARNING)   |
+| `DATABASE_URL`        | `sqlite:///./nuria.db`                      | SQLite database path                 |
+
+> ⚠️ **Never commit your `.env` file.** The `.gitignore` is configured to exclude it.
+
+---
+
+## 📚 Knowledge Base
+
+The API uses a local SQLite database as its knowledge base. Each entry has:
+
+| Field      | Description                                              |
+|------------|----------------------------------------------------------|
+| `title`    | Short descriptive title (e.g., "Vacation Policy")        |
+| `content`  | Full text content of the knowledge entry                 |
+| `tags`     | Comma-separated keywords for retrieval matching          |
+| `category` | Grouping: `company`, `hr`, `engineering`                 |
+
+### How Retrieval Works
+
+1. The user's message is **normalized** (lowercase, remove accents/punctuation)
+2. **Keywords** are extracted (stop words removed for both English and Spanish)
+3. Each knowledge entry is **scored**: tag match = 3pts, title match = 2pts, content match = 1pt
+4. The **top 3** highest-scoring entries are included as context in the LLM prompt
+
+### Seeding Data
+
+The database is automatically seeded on startup from `app/data/seed_data.json`. To re-seed manually:
+
+```bash
+python -m app.db.seed
+```
+
+The seed file contains 10 entries covering: company overview, leadership, employee data, HR policies, engineering processes, and internal tools.
 
 ---
 
 ## 🧪 Testing
 
-La infraestructura incluye suites de Test exhaustivas (42 pruebas pasando). No se gastan cuotas ya que las peticiones se interceptan vía `AsyncMock`. Además, la BD se genera localmente para los test con `StaticPool` en RAM, siendo ultrarrápida (0.5s en ejecutarse completa).
+The test suite covers health checks, chat endpoints, and the retrieval service:
 
-Ejecutar:
 ```bash
+# Run all tests
+make test
+
+# Or manually with verbose output
 pytest tests/ -v
+
+# Run a specific test file
+pytest tests/test_chat.py -v
+
+# Run a specific test
+pytest tests/test_chat.py::test_chat_success -v
 ```
+
+### Test Structure
+
+| File                  | Coverage                                          |
+|-----------------------|---------------------------------------------------|
+| `test_health.py`      | Health endpoint returns `200` and correct payload |
+| `test_chat.py`        | Chat flow: success, validation, error handling    |
+| `test_retrieval.py`   | Keyword extraction, scoring, context retrieval    |
+
+Tests use an **in-memory SQLite database** and **mocked OpenRouter responses** — no external API calls are made during testing.
 
 ---
 
-## 💭 Design Decisions
+## 🔧 Development
 
-- **Excepciones Abstraídas**: FastAPI expone el error al usuario en JSON predecible. Si la API HTTP de OpenRouter cae o sufre Timeouts, la API local responde adecuadamente con `502` / `504` sin lanzar fallos de código (`500`) inexplicables.
-- **Sin LangChain / LlamaIndex**: Se evita *Bloatware*; usar `httpx` desnudo directamente a la red es un 90% más liviano, depurable e higiénico, asegurando un control asíncrono puro.
-- **Lifespan**: Se reemplazaron convenciones viejas (`@app.on_event`) en pro del nuevo patrón `lifespan` introducido por FastAPI para arrancar eficientemente el SQLite Logger en background.
+### Available Make Commands
 
-## 🚀 Future Improvements
+```bash
+make run          # Start dev server with hot reload
+make test         # Run test suite
+make lint         # Run Ruff linter
+make seed         # Re-seed the knowledge database
+make docker-up    # Build and start Docker container
+make docker-down  # Stop Docker container
+```
 
-Para evolucionar este prototipo hacia una solución Enterprise de alta concurrencia, propondría lo siguiente:
+### Code Quality
 
-1. **Redis Cache**: Incluir un caché L1 (hash match de la pregunta) en Redis para ahorrar de manera drástica costes computacionales del LLM si dos empleados preguntan cosas idénticas como `"cual es el wifi?"`.
-2. **PostgreSQL / Vector DB**: Si el número de documentos supera los cinco mil (5,000+), saltar del keyword-matching hacia `pgvector` o `qdrant` con embeddings estáticos (`BGE-m3`).
-3. **Conversational Memory**: Adjuntar un `session_id` que registre en la base de datos el historial del usuario para inyectar los últimos 10 mensajes, permitiendo mantener un hilo conversacional extendido.
+```bash
+# Lint the codebase
+make lint
+
+# Auto-fix issues
+ruff check . --fix
+```
+
+### Middleware & Error Handling
+
+The API includes:
+
+- **Request logging middleware** — logs every request with method, path, status code, and response time
+- **Validation error handler** — returns consistent `422` responses for invalid input
+- **Generic exception handler** — catches unhandled errors, returns `500` without exposing stack traces
+
+---
+
+## 📝 License
+
+This project is licensed under the MIT License.
