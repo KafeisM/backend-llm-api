@@ -320,7 +320,7 @@ pytest tests/test_chat.py -v
 pytest tests/test_chat.py::TestChatSuccess -v
 ```
 
-Option 2: Running Tests with Docker
+### Option 2: Running Tests with Docker
 If you are running the project via Docker Compose, you must execute the tests inside the running container to ensure the correct environment and dependencies are used:
 
  ```bash
