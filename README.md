@@ -25,7 +25,7 @@
 - [Configuration](#-configuration)
 - [Knowledge Base](#-knowledge-base)
 - [Testing](#-testing)
-- [Development](#-development)
+
 
 ---
 
@@ -157,8 +157,6 @@ copy .env.example .env         # Windows
 # OPENROUTER_API_KEY=sk-or-v1-your-key-here
 
 # 6. Run the server
-make run
-# Or manually:
 uvicorn app.main:app --reload --host 0.0.0.0 --port 8080
 ```
 
@@ -306,10 +304,7 @@ The seed file contains 10 entries covering: company overview, leadership, employ
 The test suite covers health checks, chat endpoints, and the retrieval service:
 
 ```bash
-# Run all tests
-make test
-
-# Or manually with verbose output
+# Run all tests with verbose output
 pytest tests/ -v
 
 # Run a specific test file
@@ -331,28 +326,6 @@ Tests use an **in-memory SQLite database** and **mocked OpenRouter responses** â
 
 ---
 
-## ðŸ”§ Development
-
-### Available Make Commands
-
-```bash
-make run          # Start dev server with hot reload
-make test         # Run test suite
-make lint         # Run Ruff linter
-make seed         # Re-seed the knowledge database
-make docker-up    # Build and start Docker container
-make docker-down  # Stop Docker container
-```
-
-### Code Quality
-
-```bash
-# Lint the codebase
-make lint
-
-# Auto-fix issues
-ruff check . --fix
-```
 
 ### Middleware & Error Handling
 
