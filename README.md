@@ -306,10 +306,7 @@ The test suite covers health checks, chat endpoints, and the retrieval service. 
 If you are developing locally with your virtual environment activated:
 
 ```bash
-# Run all tests (using the included Makefile)
-make test
-
-# Or run manually with verbose output
+# Run manually with verbose output
 pytest tests/ -v
 
 # Run a specific test file
