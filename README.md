@@ -301,18 +301,38 @@ The seed file contains 10 entries covering: company overview, leadership, employ
 
 ## 🧪 Testing
 
-The test suite covers health checks, chat endpoints, and the retrieval service:
+The test suite covers health checks, chat endpoints, and the retrieval service. Tests use an **in-memory SQLite database** and **mocked OpenRouter responses** — no external API calls are made during testing.
+
+### Option 1: Running Tests Locally
+If you are developing locally with your virtual environment activated:
 
 ```bash
-# Run all tests with verbose output
+# Run all tests (using the included Makefile)
+make test
+
+# Or run manually with verbose output
 pytest tests/ -v
 
 # Run a specific test file
 pytest tests/test_chat.py -v
 
-# Run a specific test
-pytest tests/test_chat.py::test_chat_success -v
+# Run a specific test function or class
+pytest tests/test_chat.py::TestChatSuccess -v
 ```
+
+Option 2: Running Tests with Docker
+If you are running the project via Docker Compose, you must execute the tests inside the running container to ensure the correct environment and dependencies are used:
+
+ ```bash
+# Ensure your container is running first
+docker compose up -d
+
+# Run all tests inside the 'api' container
+docker compose exec api pytest tests/ -v
+
+# Run a specific test file inside the container
+docker compose exec api pytest tests/test_chat.py -v
+````
 
 ### Test Structure
 
