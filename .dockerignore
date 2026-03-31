@@ -15,4 +15,4 @@ htmlcov/
 *.md
 !requirements.txt
 Makefile
-tests/
+
