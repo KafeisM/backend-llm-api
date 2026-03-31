@@ -1,62 +1,62 @@
 [
   {
     "title": "Company Overview",
-    "content": "Nuria Tech Solutions is a mid-sized technology consulting company founded in 2018 and headquartered in Barcelona, Spain. The company specializes in digital transformation, cloud migration, and custom software development for enterprise clients across Europe. Nuria Tech currently operates in 3 countries: Spain, Portugal, and Germany.",
-    "tags": "company,overview,about,nuria,founded,headquarters,barcelona,mission",
+    "content": "NurIA Labs is an innovative technology startup specializing in Artificial Intelligence solutions for enterprises, with a strong focus on responsible AI use. Our flagship product is GESCON, an enterprise platform that allows companies to manage internal knowledge and deploy intelligent AI agents connected to their own data sources. Our client engagement methodology consists of three main steps: Diagnosis (understanding bottlenecks), Pilot (controlled environment validation), and Deployment (industrialization and training).",
+    "tags": "company,overview,about,nuria,labs,ai,artificial,intelligence,gescon,startup,mission",
     "category": "company"
   },
   {
     "title": "Partners and Leadership",
-    "content": "Nuria Tech Solutions has 5 founding partners: Elena Martínez (CEO), Carlos Ruiz (CTO), Ana Beltrán (COO), Jorge Navarro (CFO), and Laura Chen (VP of Engineering). The leadership team meets weekly on Tuesdays at 10:00 AM CET. Strategic decisions require approval from at least 3 of the 5 partners.",
-    "tags": "partners,leadership,founders,ceo,cto,management,team,elena,carlos,ana,jorge,laura",
+    "content": "NurIA Labs is led by a core team of AI experts and founders: Elena Martínez (CEO), Carlos Ruiz (CTO & Head of AI), Ana Beltrán (COO), Jorge Navarro (CFO), and Laura Chen (VP of Engineering). The leadership team meets weekly on Tuesdays at 10:00 AM CET. Strategic decisions regarding the GESCON platform roadmap and new AI model integrations require approval from at least 3 of the 5 partners.",
+    "tags": "partners,leadership,founders,ceo,cto,management,team,elena,carlos,ana,jorge,laura,ai",
     "category": "company"
   },
   {
     "title": "Employee Count and Teams",
-    "content": "As of 2025, Nuria Tech Solutions has 127 employees distributed across the following teams: Engineering (62 people), Product (15 people), Design (10 people), Sales (18 people), Marketing (8 people), HR (6 people), Finance (4 people), and Operations (4 people). The company has grown 40% year over year since 2022.",
-    "tags": "employees,count,headcount,teams,engineering,product,design,sales,growth,staff,people",
+    "content": "As of 2026, NurIA Labs has a growing team of 48 employees distributed across specialized areas: AI & Data Engineering (18 people), GESCON Platform Development (12 people), Product & Design (6 people), Sales & Partnerships (6 people), Customer Success (4 people), and Operations/HR (2 people). The team works closely to integrate the latest LLMs into our enterprise solutions.",
+    "tags": "employees,count,headcount,teams,engineering,product,data,ai,sales,growth,staff,people",
     "category": "company"
   },
   {
     "title": "Onboarding Process",
-    "content": "New employees go through a 2-week onboarding process. Week 1 includes: equipment setup (laptop, monitors, peripherals), account creation (email, Slack, GitHub, Jira), HR paperwork and benefits enrollment, security training, and a welcome lunch with the team. Week 2 includes: introduction to the codebase, pair programming sessions with a buddy, architecture overview presentation, and first small task assignment. Each new hire is assigned a dedicated onboarding buddy for their first 3 months.",
-    "tags": "onboarding,new,employee,hire,process,setup,welcome,buddy,training,first,day,week",
+    "content": "New employees go through a 2-week onboarding process. Week 1 includes: equipment setup, account creation (email, Slack, GitHub, Jira, and administrative access to GESCON), HR paperwork, mandatory AI Ethics & Security training, and a welcome lunch. Week 2 includes: introduction to the GESCON architecture, pair programming with a buddy, and a first small task (e.g., adding a feature to a GESCON agent). Each new hire is assigned a dedicated onboarding buddy.",
+    "tags": "onboarding,new,employee,hire,process,setup,welcome,buddy,training,gescon,first,week",
     "category": "hr"
   },
   {
     "title": "How to Open a Jira Ticket",
-    "content": "To create a new Jira ticket: 1) Go to jira.nuriatech.internal and log in with your company SSO. 2) Select the appropriate project board (ENG for engineering, PROD for product, OPS for operations). 3) Click 'Create Issue' and choose the issue type: Bug, Story, Task, or Epic. 4) Fill in the required fields: Summary, Description, Priority (P1-Critical to P4-Low), and Assignee. 5) Add labels and sprint if applicable. 6) For bugs, always include: steps to reproduce, expected behavior, actual behavior, and screenshots. All tickets must follow the naming convention: [TEAM]-[NUMBER] Description.",
-    "tags": "jira,ticket,issue,bug,create,how,to,project,board,task,story,epic,report",
+    "content": "To create a new Jira ticket: 1) Go to jira.nurialabs.internal and log in. 2) Select the appropriate project board (GESCON-CORE for platform, AI-MODELS for LLM integrations, OPS for infrastructure). 3) Click 'Create Issue' and choose: Bug, Story, Task, or Epic. 4) Fill in Summary, Description, Priority (P1-Critical to P4-Low). 5) For GESCON bugs, always include: steps to reproduce, expected AI agent behavior, actual AI agent response, and the specific LLM model used (e.g., GPT-4o, Claude 3.5).",
+    "tags": "jira,ticket,issue,bug,create,how,to,project,board,task,story,epic,report,gescon",
     "category": "engineering"
   },
   {
     "title": "Vacation and Time-Off Policy",
-    "content": "All full-time employees receive 23 paid vacation days per year, plus national and regional holidays. Vacation requests must be submitted at least 2 weeks in advance through BambooHR. Team leads must approve requests within 3 business days. No more than 30% of a team can be on vacation simultaneously. Unused vacation days can be carried over (maximum 5 days) to Q1 of the following year. Sick leave requires a medical certificate if it exceeds 3 consecutive days. Employees also get 2 personal days per year for appointments or errands.",
+    "content": "All full-time employees receive 23 paid vacation days per year, plus national and regional holidays. Vacation requests must be submitted at least 2 weeks in advance through BambooHR. Team leads must approve requests within 3 business days. No more than 30% of a team can be on vacation simultaneously. Unused vacation days can be carried over (maximum 5 days) to Q1 of the following year. Sick leave requires a medical certificate if it exceeds 3 consecutive days.",
     "tags": "vacation,holidays,time,off,days,policy,leave,sick,pto,bamboo,request,paid",
     "category": "hr"
   },
   {
     "title": "Incident Management Process",
-    "content": "Incidents are classified by severity: SEV1 (service down, all users affected - response within 15 minutes), SEV2 (major feature broken, many users affected - response within 1 hour), SEV3 (minor feature issue, some users affected - response within 4 hours), SEV4 (cosmetic or low-impact issue - next business day). For SEV1 and SEV2: immediately notify the on-call engineer via PagerDuty, create an incident channel in Slack (#incident-YYYY-MM-DD), start a war room call, and post status updates every 30 minutes. Post-incident reviews are mandatory for SEV1 and SEV2 within 48 hours. The on-call rotation is weekly and managed in PagerDuty.",
-    "tags": "incident,severity,sev1,sev2,outage,pagerduty,oncall,on-call,emergency,war,room,postmortem,response",
+    "content": "Incidents are classified by severity. SEV1 (GESCON platform down, API integrations failing for all clients - response within 15 mins), SEV2 (Specific AI agent or data source sync broken - response within 1 hour), SEV3 (Minor UI issue in GESCON - response within 4 hours). For SEV1/SEV2: notify the on-call engineer via PagerDuty, create a Slack channel (#incident-YYYY-MM-DD), start a Google Meet war room. Post-incident reviews are mandatory for SEV1/SEV2 to prevent future AI hallucination or downtime issues.",
+    "tags": "incident,severity,sev1,sev2,outage,pagerduty,oncall,emergency,war,room,postmortem,gescon",
     "category": "engineering"
   },
   {
     "title": "Internal Tools and Platforms",
-    "content": "Nuria Tech uses the following internal tools: Communication - Slack (primary), Google Meet (video calls), email (external only). Project Management - Jira (engineering), Notion (documentation and wikis). Code - GitHub Enterprise (repositories), GitHub Actions (CI/CD), SonarQube (code quality). Infrastructure - AWS (primary cloud), Terraform (IaC), Datadog (monitoring), PagerDuty (alerting). HR - BambooHR (time off, payroll), Greenhouse (recruiting). Design - Figma (UI/UX design), Miro (whiteboarding). All tools are accessible via company SSO (Okta).",
-    "tags": "tools,platforms,software,slack,github,jira,notion,aws,internal,sso,okta,datadog,figma",
+    "content": "NurIA Labs uses the following internal tools: Communication - Slack, Google Meet. Internal Knowledge - We use our own GESCON platform configured with internal company data for HR and IT queries. Project Management - Jira, Notion. Code - GitHub Enterprise, GitHub Actions. Infrastructure - AWS, Vercel, Datadog (monitoring), PagerDuty. Support - soporte@nurialabs.com for client ticketing. All tools are accessible via company SSO.",
+    "tags": "tools,platforms,software,slack,github,jira,notion,aws,gescon,sso,datadog,support",
     "category": "engineering"
   },
   {
     "title": "Remote Work Policy",
-    "content": "Nuria Tech operates with a hybrid work model. Employees can work remotely up to 3 days per week. Tuesday and Thursday are mandatory in-office days for team collaboration. Fully remote positions are available for senior roles with manager approval. Remote workers must be available during core hours (10:00 AM - 4:00 PM CET). Home office equipment stipend: 500 EUR one-time setup allowance for new employees. Internet reimbursement: 30 EUR/month for remote workers.",
+    "content": "NurIA Labs operates with a flexible hybrid work model. Employees can work remotely up to 3 days per week. Tuesday and Thursday are our recommended in-office days for architecture whiteboard sessions and team collaboration. Remote workers must be available during core hours (10:00 AM - 4:00 PM CET). Home office equipment stipend: 500 EUR one-time setup allowance for new employees to ensure a proper remote workstation.",
     "tags": "remote,work,home,office,hybrid,policy,wfh,flexible,hours,stipend",
     "category": "hr"
   },
   {
     "title": "Code Review and Deployment Process",
-    "content": "All code changes require a pull request with at least 1 approval from a peer reviewer. PRs must pass all CI checks (tests, linting, security scan) before merging. The main branch is protected and requires linear history (rebase merging). Deployments to staging happen automatically on merge to main. Production deployments are triggered manually through GitHub Actions and require approval from a tech lead. Deployment windows are Monday to Thursday, 10:00 AM - 3:00 PM CET. No deployments on Fridays or before holidays (freeze periods). Rollback procedures must be documented for every production release.",
-    "tags": "code,review,pull,request,pr,deployment,deploy,ci,cd,merge,staging,production,release,rollback",
+    "content": "All code changes to the GESCON platform require a pull request with at least 1 approval. PRs must pass all CI checks (tests, linting, security). If the PR modifies AI prompts or model parameters, it must also pass the automated 'Prompt Evaluation' suite to ensure response quality and prevent regressions. Deployments to staging happen automatically on merge to main. Production deployments are triggered manually through GitHub Actions. Rollback procedures must be documented for every release.",
+    "tags": "code,review,pull,request,pr,deployment,deploy,ci,cd,merge,staging,production,prompts,llm",
     "category": "engineering"
   }
 ]
