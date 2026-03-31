@@ -156,7 +156,7 @@ copy .env.example .env         # Windows
 # OPENROUTER_API_KEY=sk-or-v1-your-key-here
 
 # 6. Run the server
-uvicorn app.main:app --reload --host 0.0.0.0 --port 8080
+uvicorn app.main:app --host 0.0.0.0 --port 8080
 ```
 
 ### Option 2: Docker (Recommended)
