@@ -80,7 +80,6 @@ POST /chat/ → Validate Input → Extract Keywords → Query Knowledge Base
 | **Validation**    | [Pydantic v2](https://docs.pydantic.dev/) — data validation & settings |
 | **Server**        | [Uvicorn](https://www.uvicorn.org/) — ASGI server               |
 | **Testing**       | [Pytest](https://docs.pytest.org/) + pytest-asyncio             |
-| **Linting**       | [Ruff](https://github.com/astral-sh/ruff) — fast Python linter  |
 | **Containerization** | Docker + Docker Compose                                      |
 
 ---
